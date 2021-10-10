@@ -1,0 +1,27 @@
+---
+title: "Data Science I: HW2"
+author: "Sydney Musick"
+output: github_document
+---
+
+# Uploading the Mr. Trashwheel Dataset
+
+Packages upload.
+```{r setup}
+library(readxl)
+library(tidyverse)
+```
+
+Data upload and cleaning for trash data.
+```{r trashwheel upload}
+trashwheel_df = 
+  drop_na(
+    janitor::clean_names(
+          read_excel("trashwheels.xlsx", sheet = 1, col_names = TRUE, range = "A2:N534")
+         )) %>%
+  mutate(sports_balls = round(sports_balls, digits = 0))
+trashwheel_df
+```
+
+
+
