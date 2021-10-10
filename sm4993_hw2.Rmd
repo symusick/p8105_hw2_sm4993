@@ -175,4 +175,15 @@ names_df =
 names_df
 ```
 
+### Making a table for the popularity of name "Olivia".
+```{r olivia table}
+names_df %>%
+  filter(childs_first_name == "OLIVIA") %>%
+  select(ethnicity, year_of_birth, rank) %>%
+  pivot_wider(
+  names_from = "year_of_birth", 
+  values_from = "rank")
+```
+
+
 
