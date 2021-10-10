@@ -160,5 +160,19 @@ The `unemployment_df` dataset has `r nrow(unemployment_df)` rows and `r ncol(une
 
 The `all_df` dataset is a merging of dataframes `pols_df`, `snp_df`, and `unemployment_df`. It has `r nrow(all_df)` rows and `r ncol(all_df)` columns. It includes variables `r names(all_df)`. It contains data on the political alignment of the president, governors, senators, and representatives, the closing values of the S&P stock index, and the unemployment rate from 1950-2015.
 
+# Problem 3
+
+### Uploading baby name file.
+```{r baby name upload}
+names_df = 
+  janitor::clean_names(
+  read_csv("Popular_Baby_Names.csv", col_names = TRUE)) %>%
+  mutate(ethnicity = replace(ethnicity, ethnicity == "ASIAN AND PACI", "ASIAN AND PACIFIC ISLANDER")) %>%
+  mutate(ethnicity = replace(ethnicity, ethnicity == "BLACK NON HISP", "BLACK NON HISPANIC")) %>%
+  mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON HISPANIC")) %>%
+  mutate(childs_first_name = toupper(childs_first_name)) %>%
+  distinct()
+names_df
+```
 
 
