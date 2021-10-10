@@ -7,14 +7,14 @@ output: github_document
 # Problem 1
 
 ### Packages upload.
-```{r setup}
+```{r setup, echo = FALSE}
 library(readxl)
 library(tidyverse)
 library(lubridate)
 ```
 
 ### Data upload and cleaning for trash data.
-```{r trashwheel upload}
+```{r trashwheel upload, echo = FALSE}
 trashwheel_df = 
   drop_na(
     janitor::clean_names(
@@ -25,7 +25,7 @@ trashwheel_df
 ```
 
 ### Data upload and cleaning for 2018 precipitation data.
-```{r 2018 upload}
+```{r 2018 upload, echo = FALSE}
 precipitation_2018_df = 
   drop_na(
     janitor::clean_names(
@@ -36,7 +36,7 @@ precipitation_2018_df
 ```
 
 ### Data upload and cleaning for 2019 precipitation data.
-```{r 2019 upload}
+```{r 2019 upload, echo = FALSE}
 precipitation_2019_df = 
   drop_na(
     janitor::clean_names(
@@ -47,7 +47,7 @@ precipitation_2018_df
 ```
 
 ### Combining the 2018 and 2019 dataframes.
-```{r combine}
+```{r combine, echo = FALSE}
 precipitation_df = 
   bind_rows(precipitation_2018_df, precipitation_2019_df) %>%
   mutate(month = c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))
@@ -62,7 +62,7 @@ The `precipitation_df` dataset has `r nrow(precipitation_df)` observations. It i
 # Problem 2
 
 ### Data upload and cleaning for pols data.
-```{r pols upload}
+```{r pols upload, echo = FALSE}
 pols_df = 
   janitor::clean_names(
           read_csv("fivethirtyeight_datasets/pols-month.csv", col_names = TRUE)) %>%
@@ -90,7 +90,7 @@ pols_df
 ```
 
 ### Data upload and cleaning for snp data.
-```{r snp upload}
+```{r snp upload, echo = FALSE}
 snp_df = 
   janitor::clean_names(
   read_csv("fivethirtyeight_datasets/snp.csv", col_names = TRUE)) %>%
@@ -115,7 +115,7 @@ snp_df
 ```
 
 ### Data upload and cleaning for unemployment data.
-```{r unemployment upload}
+```{r unemployment upload, echo = FALSE}
 unemployment_df = 
   janitor::clean_names(
   read_csv("fivethirtyeight_datasets/unemployment.csv", col_names = TRUE)) %>%
@@ -139,14 +139,14 @@ unemployment_df
 ```
 
 ### Combining the pols and snp dataframes.
-```{r combine snp pols}
+```{r combine snp pols, echo = FALSE}
 pols_snp_df =
   inner_join(pols_df, snp_df, by = c("year", "month"))
 pols_snp_df
 ```
 
 ### Combining the pols_snp and unemployment dataframes.
-```{r combine snp_pols unemployment}
+```{r combine snp_pols unemployment, echo = FALSE}
 all_df =
   inner_join(pols_snp_df, unemployment_df, by = c("year", "month"))
 all_df
@@ -163,7 +163,7 @@ The `all_df` dataset is a merging of dataframes `pols_df`, `snp_df`, and `unempl
 # Problem 3
 
 ### Uploading baby name file.
-```{r baby name upload}
+```{r baby name upload, echo = FALSE}
 names_df = 
   janitor::clean_names(
   read_csv("Popular_Baby_Names.csv", col_names = TRUE)) %>%
@@ -175,7 +175,7 @@ names_df =
 ```
 
 ### Making a table for the popularity of name "Olivia".
-```{r olivia table}
+```{r olivia table, echo = FALSE}
 names_df %>%
   filter(childs_first_name == "OLIVIA") %>%
   select(ethnicity, year_of_birth, rank) %>%
@@ -185,7 +185,7 @@ names_df %>%
 ```
 
 ### Making a table for the popularity of name "Jayden".
-```{r jayden table}
+```{r jayden table, echo = FALSE}
 names_df %>%
   filter(childs_first_name == "JAYDEN") %>%
   select(ethnicity, year_of_birth, rank) %>%
@@ -195,7 +195,7 @@ names_df %>%
 ```
 
 ### Plotting count against rank for male, white non-hispanic children born in 2016.
-```{r plot}
+```{r plot, echo = FALSE}
 names_df %>%
   filter(ethnicity == "WHITE NON HISPANIC") %>%
   filter(gender == "MALE") %>%
