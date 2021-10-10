@@ -194,5 +194,14 @@ names_df %>%
   values_from = "rank")
 ```
 
+### Plotting count against rank for male, white non-hispanic children born in 2016.
+```{r plot}
+names_df %>%
+  filter(ethnicity == "WHITE NON HISPANIC") %>%
+  filter(gender == "MALE") %>%
+  filter(year_of_birth == "2016") %>%
+  ggplot(aes(x = rank, y = count)) + geom_point() 
+  ggsave("scatter_plot.pdf", height = 4, width = 6)
+```
 
 
