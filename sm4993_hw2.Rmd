@@ -23,5 +23,33 @@ trashwheel_df =
 trashwheel_df
 ```
 
+Data upload and cleaning for 2018 precipitation data.
+```{r 2018 upload}
+precipitation_2018_df = 
+  drop_na(
+    janitor::clean_names(
+          read_excel("trashwheels.xlsx", sheet = 7, col_names = TRUE, range = "A2:B14")
+         )) %>%
+  mutate(year = 2018)
+precipitation_2018_df
+```
 
+Data upload and cleaning for 2019 precipitation data.
+```{r 2019 upload}
+precipitation_2019_df = 
+  drop_na(
+    janitor::clean_names(
+          read_excel("trashwheels.xlsx", sheet = 6, col_names = TRUE, range = "A2:B14")
+         )) %>%
+  mutate(year = 2019)
+precipitation_2018_df
+```
+
+Combining the 2018 and 2019 dataframes.
+```{r combine}
+precipitation_df = 
+  bind_rows(precipitation_2018_df, precipitation_2019_df) %>%
+  mutate(month = c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))
+precipitation_df
+```
 
