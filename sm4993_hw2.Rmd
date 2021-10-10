@@ -53,3 +53,7 @@ precipitation_df =
 precipitation_df
 ```
 
+The `trashwheel_df` dataset has `r nrow(trashwheel_df)` observations. It includes variables `r names(trashwheel_df)`. The median number of sports balls in a dumpster in 2019 was `r median(pull(trashwheel_df, sports_balls))`. 
+
+The `precipitation_df` dataset has `r nrow(precipitation_df)` observations. It includes variables `r names(precipitation_df)`. The total precipitation in 2018 was `r sum(pull(precipitation_2018_df, total))` inches.
+
