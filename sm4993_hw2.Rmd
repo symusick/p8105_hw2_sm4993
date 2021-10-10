@@ -4,15 +4,16 @@ author: "Sydney Musick"
 output: github_document
 ---
 
-# Uploading the Mr. Trashwheel Dataset
+# Problem 1
 
-Packages upload.
+### Packages upload.
 ```{r setup}
 library(readxl)
 library(tidyverse)
+library(lubridate)
 ```
 
-Data upload and cleaning for trash data.
+### Data upload and cleaning for trash data.
 ```{r trashwheel upload}
 trashwheel_df = 
   drop_na(
@@ -23,7 +24,7 @@ trashwheel_df =
 trashwheel_df
 ```
 
-Data upload and cleaning for 2018 precipitation data.
+### Data upload and cleaning for 2018 precipitation data.
 ```{r 2018 upload}
 precipitation_2018_df = 
   drop_na(
@@ -34,7 +35,7 @@ precipitation_2018_df =
 precipitation_2018_df
 ```
 
-Data upload and cleaning for 2019 precipitation data.
+### Data upload and cleaning for 2019 precipitation data.
 ```{r 2019 upload}
 precipitation_2019_df = 
   drop_na(
@@ -45,7 +46,7 @@ precipitation_2019_df =
 precipitation_2018_df
 ```
 
-Combining the 2018 and 2019 dataframes.
+### Combining the 2018 and 2019 dataframes.
 ```{r combine}
 precipitation_df = 
   bind_rows(precipitation_2018_df, precipitation_2019_df) %>%
@@ -56,4 +57,101 @@ precipitation_df
 The `trashwheel_df` dataset has `r nrow(trashwheel_df)` observations. It includes variables `r names(trashwheel_df)`. The median number of sports balls in a dumpster in 2019 was `r median(pull(trashwheel_df, sports_balls))`. 
 
 The `precipitation_df` dataset has `r nrow(precipitation_df)` observations. It includes variables `r names(precipitation_df)`. The total precipitation in 2018 was `r sum(pull(precipitation_2018_df, total))` inches.
+
+
+# Problem 2
+
+### Data upload and cleaning for pols data.
+```{r pols upload}
+pols_df = 
+  janitor::clean_names(
+          read_csv("fivethirtyeight_datasets/pols-month.csv", col_names = TRUE)) %>%
+  separate(mon, into = c("year", "month", "day")) %>%
+  mutate(month = replace(month, month == "01", "January")) %>%
+  mutate(month = replace(month, month == "02", "February")) %>%
+  mutate(month = replace(month, month == "03", "March")) %>%
+  mutate(month = replace(month, month == "04", "April")) %>%
+  mutate(month = replace(month, month == "05", "May")) %>%
+  mutate(month = replace(month, month == "06", "June")) %>%
+  mutate(month = replace(month, month == "07", "July")) %>%
+  mutate(month = replace(month, month == "08", "August")) %>%
+  mutate(month = replace(month, month == "09", "September")) %>%
+  mutate(month = replace(month, month == "10", "October")) %>%
+  mutate(month = replace(month, month == "11", "November")) %>%
+  mutate(month = replace(month, month == "12", "December")) %>%
+  mutate(prez_gop = replace(prez_gop, prez_gop == "1", 11)) %>%
+  mutate(prez_dem = replace(prez_dem, prez_dem == "1", 99)) %>%
+  mutate(president = prez_gop + prez_dem ) %>%
+  mutate(president = replace(president, president == 11, "gop")) %>%
+  mutate(president = replace(president, president == 99, "dem")) %>%
+  select(-day, -prez_gop, -prez_dem) %>%
+  mutate(year = as.numeric(year))
+pols_df
+```
+
+### Data upload and cleaning for snp data.
+```{r snp upload}
+snp_df = 
+  janitor::clean_names(
+  read_csv("fivethirtyeight_datasets/snp.csv", col_names = TRUE)) %>%
+  separate(date, into = c("month", "day", "year")) %>%
+  mutate(month = replace(month, month == "1", "January")) %>%
+  mutate(month = replace(month, month == "2", "February")) %>%
+  mutate(month = replace(month, month == "3", "March")) %>%
+  mutate(month = replace(month, month == "4", "April")) %>%
+  mutate(month = replace(month, month == "5", "May")) %>%
+  mutate(month = replace(month, month == "6", "June")) %>%
+  mutate(month = replace(month, month == "7", "July")) %>%
+  mutate(month = replace(month, month == "8", "August")) %>%
+  mutate(month = replace(month, month == "9", "September")) %>%
+  mutate(month = replace(month, month == "10", "October")) %>%
+  mutate(month = replace(month, month == "11", "November")) %>%
+  mutate(month = replace(month, month == "12", "December")) %>%
+  select (-day) %>%
+  select(year, month, close) %>%
+  mutate(year = as.numeric(year)) %>%
+  mutate(year = ifelse(68 > year %% 100 & 16 > year %% 100, 2000 + year %% 100, 1900 + year %% 100))
+snp_df
+```
+
+### Data upload and cleaning for unemployment data.
+```{r unemployment upload}
+unemployment_df = 
+  janitor::clean_names(
+  read_csv("fivethirtyeight_datasets/unemployment.csv", col_names = TRUE)) %>%
+  pivot_longer(
+    jan:dec,
+    names_to = "month", 
+    values_to = "unemployment_rate") %>%
+  mutate(month = replace(month, month == "jan", "January")) %>%
+  mutate(month = replace(month, month == "feb", "February")) %>%
+  mutate(month = replace(month, month == "mar", "March")) %>%
+  mutate(month = replace(month, month == "apr", "April")) %>%
+  mutate(month = replace(month, month == "may", "May")) %>%
+  mutate(month = replace(month, month == "jun", "June")) %>%
+  mutate(month = replace(month, month == "jul", "July")) %>%
+  mutate(month = replace(month, month == "aug", "August")) %>%
+  mutate(month = replace(month, month == "sep", "September")) %>%
+  mutate(month = replace(month, month == "oct", "October")) %>%
+  mutate(month = replace(month, month == "nov", "November")) %>%
+  mutate(month = replace(month, month == "dec", "December"))
+unemployment_df
+```
+
+### Combining the pols and snp dataframes.
+```{r combine snp pols}
+pols_snp_df =
+  inner_join(pols_df, snp_df, by = c("year", "month"))
+pols_snp_df
+```
+
+### Combining the pols_snp and unemployment dataframes.
+```{r combine snp_pols unemployment}
+all_df =
+  inner_join(pols_snp_df, unemployment_df, by = c("year", "month"))
+all_df
+```
+
+
+
 
